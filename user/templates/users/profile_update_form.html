@@ -1,0 +1,30 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <main class="py-5 mt-5">
+        <div>
+            <form action="" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div style="display: flex; justify-content: center; gap: 50px;">
+                    <div style="display: grid; grid-template-columns: auto;" class="border px-3 py-3">
+                        <h4 class="text-decoration-underline mt-2">User Update</h4>
+                        {{u_form|crispy }}
+                    </div>
+                    <div style="display: grid; grid-template-columns: auto;" class="border px-3 py-3">
+                        <h4 class="text-decoration-underline mt-2">Profile Update</h4>
+                        {{p_form|crispy }}
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: center;" class="py-3">
+                <button class="btn btn-outline-secondary" type="submit">Update</button>
+
+                </div>
+            </form>
+        </div>
+    </main>
+
+
+{% endblock %}

@@ -1,0 +1,408 @@
+{% extends 'core/base.html '%}
+
+{% block content %}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+{% load crispy_forms_tags %}
+<style>
+  .tab {
+    cursor: pointer;
+    padding: 10px 20px;
+    margin-right: 5px;
+    background-color: #007bff;
+    color: white;
+    border-radius: 5px;
+    display: inline-block;
+  }
+
+  .tab.active {
+    background-color: #0056b3;
+  }
+
+  .tab-content {
+    display: none;
+    margin-top: 20px;
+  }
+
+  .tab-content.active {
+    display: block;
+  }
+</style>
+<main class="py-5 mt-5">
+  <div>
+
+    <section class="h-100 gradient-custom-2">
+      <div class="container py-5 h-100">
+        <div class="row d-flex justify-content-center">
+          <div class="col col-lg-9 col-xl-8">
+            <div class="card">
+              <div class="rounded-top text-white d-flex flex-row" style="background-image: url('https://atolyestone.com/cdn/shop/articles/26-5_1024x.jpg?v=1630508549'); background-repeat: no-repeat; background-size: cover; background-position: center;
+                    height:200px;">
+                <form action="" method="POST">
+                  {% csrf_token %}
+                  <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-transparent" data-bs-toggle="modal"
+                      data-bs-target="#staticBackdrop">
+                      <img src="{{profile.image.url}}" alt="Profile image" class="img-fluid img-thumbnail mt-4 mb-2"
+                        style="width: 150px; z-index: 1">
+                    </button>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
+                      tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <img src="{{profile.image.url}}" alt="Profile image"
+                              class="img-fluid img-thumbnail mt-4 mb-2"
+                              style="width: 550px; object-fit: cover; z-index: 1">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+
+
+                    {% if request.user == profile.user %}
+                    <button type="button" class="" style="z-index: 1; background-color: transparent; border: none;">
+                      <a href="{% url 'update' %}" class="text-decoration-none btn btn-warning">Edit profile</a>
+
+                    </button>
+                    {% else %}
+
+                    {% endif %}
+                  </div>
+                </form>
+                <div class="ms-3" style="margin-top: 130px;">
+                  <h5 class="text-light">{{ profile.user }}</h5>
+
+                  {% if profile.city %}
+                  <p class="text-light">{{ profile.city }}</p>
+                  {% else %}
+                  <p class="text-light">From somewhere.</p>
+                  {% endif %}
+                </div>
+              </div>
+              <div class="p-4 text-black bg-body-tertiary">
+                <div class="d-flex justify-content-end text-center py-1 text-body">
+                  <div>
+                    <p class="small text-muted mb-0">Products</p>
+                    <p class="mb-1 h5"><small>{{ products.count }}</small></p>
+
+                  </div>
+
+
+                </div>
+              </div>
+              <div class="card-body p-4 text-black">
+
+                <div style="display: flex; justify-content: space-around; gap: 50px;">
+                  <div class="mb-5 text-body rounded">
+                    <p class="lead fw-normal mb-1">Phone number:</p>
+                    <div class="p-4 bg-body-tertiary rounded">
+                      {% if profile.phone_number %}
+                      {{ profile.phone_number }}
+                      {% else %}
+                      <p class="text-secondary">Not posted yet...</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="mb-5 text-body">
+                    <p class="lead fw-normal mb-1">Experience:</p>
+                    <div class="p-4 bg-body-tertiary">
+                      {% if profile.experience %}
+                      {{ profile.experience }} - Year
+                      {% else %}
+                      <p class="text-secondary">Not posted yet...</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="mb-5 text-body">
+                    <p class="lead fw-normal mb-1">Email:</p>
+                    <div class="p-4 bg-body-tertiary">
+                      {% if profile.user.email %}
+                      {{ profile.user.email }}
+                      {% else %}
+                      <p class="text-secondary">Not posted yet...</p>
+                      {% endif %}
+                    </div>
+                  </div>
+
+                </div>
+                <div class="container">
+                  <div id="tabs">
+                    <div class="tab active" data-target="posts">Products</div>
+                    <div class="tab" data-target="reels">Reels</div>
+                  </div>
+                  <div id="content">
+                    <div class="tab-content active" id="posts">
+                      <h2>Products</h2>
+                      <div
+                        style="display: grid; justify-content: center; gap: 50px; grid-template-columns:  auto auto;">
+
+                        {% for product in products %}
+
+                        <div style="width: 300px;">
+                          {% if product.images.count > 1 %}
+                          <div id="carousel{{ product.id }}" class="carousel slide border" style="width: 300px;"
+                            data-ride="carousel">
+                            <div class="carousel-inner">
+                              {% for image in product.images.all %}
+                              <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img style="width: 300px; height: 300px; object-fit: cover;" src="{{ image.image.url }}"
+                                  alt="{{ product.name }}">
+                              </div>
+                              {% endfor %}
+                            </div>
+                            <a class="carousel-control-prev" href="#carousel{{ product.id }}" role="button"
+                              data-slide="prev">
+                              <span class="carousel-control-prev-icon bg-dark rounded" aria-hidden="true"></span>
+                              <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel{{ product.id }}" role="button"
+                              data-slide="next">
+                              <span class="carousel-control-next-icon bg-dark rounded" aria-hidden="true"></span>
+                              <span class="sr-only">Next</span>
+                            </a>
+
+                          </div>
+
+                          {% else %}
+                          {% for image in product.images.all %}
+                          <img style="width: 300px; height: 300px; object-fit: cover;" src="{{ image.image.url }}"
+                            alt="{{ product.name }}">
+                          {% endfor %}
+
+                          {% endif %}
+                          <h2 class="px-2">{{ product.name }}</h2>
+                          <p class="px-2">Price: 💲{{ product.price }}</p>
+                          <div class="d-flex gap-5 px-2">
+                            <p>
+                              {% if product.option == 'gold' %}
+                              <span class="badge text-bg-warning">Gold</span>
+                              {% elif product.option == 'silver' %}
+                              <span class="badge text-bg-secondary">Silver</span>
+                              {% endif %}
+                            </p>
+                            {% if request.user == product.author %}
+                            <p>Creator: You</p>
+                            {% else %}
+                            <p>Creator: {{ product.author.username }}</p>
+                            {% endif %}
+                          </div>
+                          <!-- Button trigger modal -->
+                          <div style="display: flex; justify-content: space-between; padding: 0 5px;">
+                            <button type="button" class="btn btn-success mx-2" data-toggle="modal"
+                              data-target="#modal{{ product.id }}">
+                              Quick Overview
+                            </button>
+                            <!-- Example single danger button -->
+                            <div class="btn-group">
+                              <button type="button" class="btn btn-danger dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                del & upd
+                              </button>
+                              <ul class="dropdown-menu">
+                                {% if request.user == product.author %}
+                                <a href="{% url 'delete_product' product.id %}" class="btn btn-danger dropdown-item">Delete</a>
+                                <a href="{% url 'update_profile' product.id %}" class="btn btn-primary dropdown-item">Update</a>
+
+                                {% else%}
+                                {% endif %}
+                                
+                              </ul>
+                            </div>
+                           
+                          </div>
+
+                          <!-- Modal -->
+                          <div class="modal fade" id="modal{{ product.id }}" tabindex="-1" role="dialog"
+                            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document">
+                              <div class="modal-content">
+                                <div class="modal-header">
+                                  <h5 class="modal-title" id="exampleModalLongTitle">
+                                    <h2>{{ product.name }}</h2>
+
+                                  </h5>
+                                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                  </button>
+                                </div>
+                                <div class="modal-body">
+                                  {% if product.images.count > 1 %}
+                                  <div id="carouselModal{{ product.id }}" class="carousel slide" data-ride="carousel">
+                                    <div class="carousel-inner">
+                                      {% for image in product.images.all %}
+                                      <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                        <img class="d-block w-100" src="{{ image.image.url }}" alt="{{ product.name }}">
+                                      </div>
+                                      {% endfor %}
+                                    </div>
+                                    <a class="carousel-control-prev" href="#carouselModal{{ product.id }}" role="button"
+                                      data-slide="prev">
+                                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                      <span class="sr-only">Previous</span>
+                                    </a>
+                                    <a class="carousel-control-next" href="#carouselModal{{ product.id }}" role="button"
+                                      data-slide="next">
+                                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                      <span class="sr-only">Next</span>
+                                    </a>
+                                  </div>
+                                  {% else %}
+                                  {% for image in product.images.all %}
+                                  <img class="d-block w-100" src="{{ image.image.url }}" alt="{{ product.name }}">
+                                  {% endfor %}
+                                  {% endif %}
+                                  <p>Price: {{ product.price }}</p>
+                                  {% if request.user == product.author %}
+                                  <p>Creator: You</p>
+                                  {% else %}
+                                  <p>Creator: {{ product.author.username }}</p>
+                                  {% endif %}
+                                  <p>
+                                    {% if product.option == 'gold' %}
+                                    <span class="badge text-bg-warning">Gold</span>
+                                    {% elif product.option == 'silver' %}
+                                    <span class="badge text-bg-secondary">Silver</span>
+                                    {% endif %}
+                                  </p>
+                                </div>
+                                <div class="modal-footer">
+                                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+
+                                  <a href="{% url 'product-detail' product.id %}" class="btn btn-primary">Detail</a>
+
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        {% endfor %}
+
+                      </div>
+                      <div class="mt-3">
+                        {% if profile.user == request.user %}
+                        <a href="{% url 'create-product' %}" class="btn btn-outline-success">Create Product</a>
+                        {% endif %}
+                      </div>
+                    </div>
+                    <div class="tab-content" id="reels">
+
+                      <h2>Reels</h2>
+                      {% if reels %}
+                      {% for reel in reels %}
+
+                      <div class="reel border px-2 py-2 bg-body-tertiary rounded">
+                        <div class="ratio ratio-16x9">
+                          <video src="{{reel.video.url}}" controls loop></video>
+
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                          <div>
+                            <h3 class="px-3">{{ reel.name }}</h3>
+                            <p class="px-3"><small>{{reel.date}}</small></p>
+                          </div>
+                          <div class="px-3 mt-3">
+                            <button class="like-button " style="border: none; background-color: #fff;"
+                              data-reelid="{{reel.id}}">
+                              <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="black"
+                                class="bi bi-heart" viewBox="0 0 16 16">
+                                <path
+                                  d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143q.09.083.176.171a3 3 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15" />
+                              </svg>
+                              <span class="like_count">{{reel.like_count}}</span>
+
+                            </button>
+
+                          </div>
+
+                        </div>
+                      </div>
+
+                      {% endfor %}
+                      <div>
+                        {% if request.user == profile.user %}
+                        <a href="{% url 'reel_create' %}" class="btn btn-outline-secondary">Create reels</a>
+                        {% endif %}
+                      </div>
+                      {% else %}
+                      <p>There is no reels yet...</p>
+                      <div>
+                        {% if request.user == profile.user %}
+                        <a href="{% url 'reel_create' %}" class="btn btn-outline-secondary">Create reels</a>
+                        {% endif %}
+                      </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+
+
+
+
+              </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    var tabs = document.querySelectorAll('.tab');
+    var contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) { t.classList.remove('active'); });
+        contents.forEach(function (c) { c.classList.remove('active'); });
+
+        tab.classList.add('active');
+        document.getElementById(tab.getAttribute('data-target')).classList.add('active');
+      });
+    });
+  });
+
+  $(document).on('click', '.like-button', function (e) {
+    e.preventDefault();
+
+    var reelId = $(this).data('reelid');
+    var $likeCount = $(this).find('.like_count');
+    var $svg = $(this).find('svg');
+    // Toggle button color
+
+
+
+    $.ajax({
+      type: 'POST',
+      url: '{% url "like" %}',
+      data: {
+        reelid: reelId,
+        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val(),
+        action: 'post'
+      },
+      success: function (json) {
+        $likeCount.text(json.result);
+
+        if (parseInt(json.result) > 0) {
+          $svg.attr('fill', 'red');
+        } else {
+          $svg.attr('fill', 'black');
+        }
+      },
+      error: function (xhr, errmsg, err) {
+        // Handle error
+      }
+    });
+  });
+</script>
+{% endblock %}

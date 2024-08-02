@@ -1,0 +1,37 @@
+{% extends 'core/base.html' %}
+
+{% load static %}
+{% block content %}
+<link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+    <main class="py-5 mt-5">
+        <div>
+            <h1 style="font-weight: 400;" class="text-danger text-center">Are you sure you want to update <strong>{{product.name}}</strong></h1>
+            <div>
+              <div class="py-5" style="display: flex; justify-content: center;">
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="">
+                        {{product_form}}
+                        <label for="images">Product Images:</label>
+            <input class=" btn btn-outline-secondary" type="file" name="images" multiple required>
+                    </div>
+                    {{phone_number_form}}
+                   <div class="d-flex justify-content-center mt-3 gap-3">
+                    <button class="btn btn-success" type="submit">Update</button>
+                    <a href="{% url 'user-profile' request.user.username%}" class="btn btn-secondary">cancel</a>
+
+                   </div>
+                   </form> 
+              </div>
+                <div class="d-flex justify-content-center gap-3 mt-5">
+
+                
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

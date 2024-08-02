@@ -1,0 +1,101 @@
+{% extends 'core/base.html '%}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'assets/css/icons.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/uikit.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'assets/css/tailwind.css' %}">
+<main class="py-5 mt-5">
+    <div>
+      
+    <div id="wrapper" class="flex flex-col justify-between h-screen">
+
+        <!-- header-->
+       
+
+        <!-- Content-->
+
+        <div>
+            <div class="lg:p-12 max-w-md max-w-xl lg:my-0 my-12 mx-auto p-6 space-y-">
+                <h1 class="lg:text-3xl text-xl font-semibold mb-6"> Sign-up</h1>
+                <!--<p class="mb-2 text-black text-lg"> Register to manage your account </p>-->
+                <div>
+                    <style>
+                        h5{
+                            color: red;
+                        }
+                    </style>
+                    {% for message in messages %}
+                        <h5>{{message}}</h5>
+                    {% endfor %}
+                </div>
+         <form class="" method="post">
+            {% csrf_token %}
+            <div class="form-group py-2 ">
+                <b>Ismingiz:</b>
+                {{ form.username }}
+                {% if form.username.errors %}
+                    <div class="text-danger">
+                        {{ form.username.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group py-2">
+                <b>Email:</b>
+
+                {{ form.email }}
+                {% if form.email.errors %}
+                    <div class="text-danger">
+                        {{ form.email.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group py-2">
+                <b>Password:</b>
+                {{ form.password1 }}
+                {% if form.password1.errors %}
+                    <div class="text-danger">
+                        {{ form.password1.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            <div class="form-group py-2">
+                <b>Password ni Qaytaring:</b>
+                {{ form.password2 }}
+                {% if form.password2.errors %}
+                    <div class="text-danger">
+                        {{ form.password2.errors }}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div style="display: flex; justify-content: center;">
+                <button type="submit" class="btn btn-primary">Sign-up</button>
+                
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <div>
+                    <p class="text-center text-light">or</p><p class="text-center text-light">Already have an account??</p>
+                    <p class="text-center text-light"><a href="{% url 'login' %}">Log-in</a></p>
+                </div>
+            </div>
+        </form>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+
+       
+
+    </div>
+    </div>
+    <script src="{% static 'assets/js/tippy.all.min.js' %}"></script>
+    <script src="{% static 'assets/js/jquery-3.3.1.min.js' %}"></script>
+    <script src="{% static 'assets/js/uikit.js' %}"></script>
+    <script src="{% static 'assets/js/simplebar.js' %}"></script>
+    <script src="{% static 'assets/js/custom.js' %}"></script>
+
+</main>
+
+{% endblock %}

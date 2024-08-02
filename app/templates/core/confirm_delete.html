@@ -1,0 +1,21 @@
+{% extends 'core/base.html' %}
+
+
+{% block content %}
+
+    <main class="py-5 mt-5">
+        <div>
+            <h1 style="font-weight: 400;" class="text-danger text-center">Are you sure you want to delete <strong>{{product.name}}</strong></h1>
+            <div>
+                <div class="d-flex justify-content-center gap-3 mt-5">
+                    <a href="{% url 'user-profile' request.user.username%}" class="btn btn-secondary">cancel</a>
+                    <form action="" method="post">
+                        {% csrf_token %}
+                        <button class="btn btn-danger" type="submit">Yes, i'm sure</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </main>
+
+{% endblock %}

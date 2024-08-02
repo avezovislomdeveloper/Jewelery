@@ -1,0 +1,23 @@
+{% extends 'core/base.html' %}
+{% load crispy_forms_tags %}
+
+
+{% block content %}
+
+<main class="py-5 mt-5 ">
+    <div>
+        <h1 style="font-weight: 300;" class="text-center">Upload reels from here </h1>
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+           <div style="display: flex; justify-content: center;">
+            <div style="width: 500px;">
+                {{form|crispy}}
+            <button class="btn btn-primary" type="submit">Create</button>
+
+            </div>
+           </div>
+        </form>
+    </div>
+</main>
+
+{% endblock  %}
